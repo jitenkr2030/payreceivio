@@ -1,0 +1,9 @@
+[2026-11-25 13:48:01,783] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2026-11-25 13:48:10,686] INFO django.server "GET / HTTP/1.1" 200 22382
+[2026-11-25 13:48:10,947] INFO django.server "GET /static/css/app.css HTTP/1.1" 200 736
+[2026-11-25 13:48:11,170] INFO django.server "GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 30587
+[2026-11-25 13:48:11,764] INFO django.server "GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14879
+[2026-11-25 13:48:11,832] INFO django.server "GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+[2026-11-25 13:48:11,844] INFO django.server "GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4700
+[2026-11-25 13:48:11,989] WARNING django.request Not Found: /favicon.ico
+[2026-11-25 13:48:11,990] WARNING django.server "GET /favicon.ico HTTP/1.1" 404 21245
