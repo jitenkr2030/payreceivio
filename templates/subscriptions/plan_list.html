@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Subscription Plans</h1>
+<div class="row g-3">{% for p in plans %}
+<div class="col-md-4"><div class="card h-100"><div class="card-body text-center">
+<h4>{{ p.label }}</h4>{% if p.is_trial %}<span class="badge bg-info">Trial</span>{% endif %}
+<div class="display-6 my-3">{% if p.monthly_price == 0 %}Free{% else %}{{ CURRENCY_SYMBOL }}{{ p.monthly_price }}<small class="text-muted">/mo</small>{% endif %}</div>
+<ul class="list-unstyled small text-start">
+<li>{{ p.max_companies }} companies</li><li>{{ p.max_branches }} branches</li>
+<li>{{ p.max_users }} users</li><li>{{ p.max_invoices_per_month }} invoices/mo</li>
+<li>{{ p.max_messages_per_month }} messages/mo</li>
+<li>{{ p.max_accounting_connections }} accounting connections</li>
+</ul>
+</div></div></div>{% endfor %}</div>
+{% endblock %}

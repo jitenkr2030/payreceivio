@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Payment Links</h1>
+<a href="{% url 'payments:link_create' %}" class="btn btn-primary mb-3">New Link</a>
+<table class="table">
+<thead><tr><th>Link ID</th><th>Customer</th><th class="text-end">Amount</th><th>Status</th><th>URL</th></tr></thead>
+<tbody>
+{% for l in links %}
+<tr><td>{{ l.link_id|truncatechars:20 }}</td><td>{{ l.customer.name }}</td><td class="text-end">{{ l.amount }}</td><td><span class="badge bg-{% if l.status == 'paid' %}success{% elif l.status == 'active' %}primary{% else %}secondary{% endif %}">{{ l.status }}</span></td><td><a href="{{ l.short_url }}" target="_blank">{{ l.short_url|truncatechars:30 }}</a></td></tr>
+{% empty %}<tr><td colspan="5" class="text-center text-muted">No payment links</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endblock %}

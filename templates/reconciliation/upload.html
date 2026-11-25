@@ -1,0 +1,10 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Upload Transactions</h1>
+<p>Statement for {{ statement.bank_account.account_name }} on {{ statement.statement_date }}</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <input type="file" name="file" accept=".csv" class="form-control mb-3" required>
+    <p class="text-muted small">CSV columns: date, amount, type, description, reference, utr, counterparty</p>
+    <button class="btn btn-primary">Upload & Auto-Match</button>
+</form>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "base/base.html" %}
+{% block title %}Dashboard - {{ APP_NAME }}{% endblock %}
+{% load humanize %}
+{% load common_tags %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-speedometer2"></i> Business Owner Dashboard</h1>
+    <span class="text-muted">{{ active_organization.name|default:"No org" }}</span>
+</div>
+
+<!-- KPI cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <div class="text-uppercase small">Total Receivables</div>
+                <div class="display-6 fw-bold">{{ CURRENCY_SYMBOL }}{{ kpis.total_receivables|floatformat:2|intcomma }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body">
+                <div class="text-uppercase small">Total Overdue</div>
+                <div class="display-6 fw-bold">{{ CURRENCY_SYMBOL }}{{ kpis.total_overdue|floatformat:2|intcomma }}</div>
+                <div class="small">{{ kpis.overdue_customer_count }} customers</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <div class="text-uppercase small">Collected This Month</div>
+                <div class="display-6 fw-bold">{{ CURRENCY_SYMBOL }}{{ kpis.collected_this_month|floatformat:2|intcomma }}</div>
+                <div class="small">Today: {{ CURRENCY_SYMBOL }}{{ kpis.collected_today|floatformat:2|intcomma }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body">
+                <div class="text-uppercase small">Upcoming (7 days)</div>
+                <div class="display-6 fw-bold">{{ CURRENCY_SYMBOL }}{{ kpis.upcoming_receivables_7d|floatformat:2|intcomma }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Secondary KPIs -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+            <div class="text-uppercase small text-muted">DSO</div>
+            <div class="h3">{{ kpis.dso|floatformat:1 }} days</div>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+            <div class="text-uppercase small text-muted">Collection Efficiency</div>
+            <div class="h3">{{ kpis.collection_efficiency|floatformat:1 }}%</div>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+            <div class="text-uppercase small text-muted">Payment Success Rate</div>
+            <div class="h3">{{ kpis.payment_success_rate|floatformat:1 }}%</div>
+        </div></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100"><div class="card-body">
+            <div class="text-uppercase small text-muted">Unallocated Payments</div>
+            <div class="h3">{{ CURRENCY_SYMBOL }}{{ kpis.unallocated_payments|floatformat:2|intcomma }}</div>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Collection trend chart -->
+    <div class="col-md-8">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-graph-up"></i> Collection Trend (Last 30 days)</div>
+            <div class="card-body">
+                <canvas id="trendChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Ageing breakdown -->
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-hourglass-split"></i> Ageing Summary</div>
+            <div class="card-body">
+                <canvas id="ageingChart" height="200"></canvas>
+                <table class="table table-sm mt-3">
+                    {% for bucket, label in AGEING_BUCKETS %}
+                    <tr>
+                        <td>{{ label }}</td>
+                        <td class="text-end">{{ CURRENCY_SYMBOL }}{{ kpis.ageing_summary|lookup:bucket|floatformat:2|intcomma }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="table-dark">
+                        <td><strong>Total</strong></td>
+                        <td class="text-end"><strong>{{ CURRENCY_SYMBOL }}{{ kpis.ageing_summary.total|floatformat:2|intcomma }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <!-- Top debtors -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-trophy"></i> Top 10 Debtors</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead><tr><th>#</th><th>Customer</th><th class="text-end">Outstanding</th></tr></thead>
+                    <tbody>
+                        {% for d in debtors %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'customers:detail' d.id %}">{{ d.name }}</a></td>
+                            <td class="text-end">{{ CURRENCY_SYMBOL }}{{ d.outstanding|floatformat:2|intcomma }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted">No outstanding customers</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Salesperson performance -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-people"></i> Salesperson Performance</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead><tr><th>Salesperson</th><th>Customers</th><th class="text-end">Collected</th><th class="text-end">Outstanding</th></tr></thead>
+                    <tbody>
+                        {% for s in salesperson_perf %}
+                        <tr>
+                            <td>{{ s.name }}</td>
+                            <td>{{ s.customer_count }}</td>
+                            <td class="text-end">{{ CURRENCY_SYMBOL }}{{ s.collected|floatformat:0|intcomma }}</td>
+                            <td class="text-end">{{ CURRENCY_SYMBOL }}{{ s.outstanding|floatformat:0|intcomma }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted">No salesperson data</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-cash-flow"></i> Cash Flow Forecast (Next 30 days)</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead><tr><th>Due Date</th><th>Invoice</th><th>Customer</th><th class="text-end">Expected</th></tr></thead>
+                    <tbody>
+                        {% for f in forecast %}
+                        <tr>
+                            <td>{{ f.date }}</td>
+                            <td>{{ f.invoice }}</td>
+                            <td>{{ f.customer }}</td>
+                            <td class="text-end">{{ CURRENCY_SYMBOL }}{{ f.amount|floatformat:2|intcomma }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted">No upcoming dues</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const trendData = {{ trend|safe|default:'[]' }};
+const trendLabels = trendData.map(d => d.date);
+const trendValues = trendData.map(d => d.amount);
+new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: { labels: trendLabels, datasets: [{ label: 'Collected', data: trendValues, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,0.1)', tension: 0.3, fill: true }] },
+    options: { responsive: true, scales: { y: { ticks: { callback: v => '₹' + v.toLocaleString() } } } }
+});
+
+const ageingLabels = [{% for bucket, label in AGEING_BUCKETS %}"{{ label }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+const ageingValues = [
+    {{ kpis.ageing_summary.current|floatformat:2|default:"0" }},
+    {{ kpis.ageing_summary|lookup:"1-30"|floatformat:2|default:"0" }},
+    {{ kpis.ageing_summary|lookup:"31-60"|floatformat:2|default:"0" }},
+    {{ kpis.ageing_summary|lookup:"61-90"|floatformat:2|default:"0" }},
+    {{ kpis.ageing_summary|lookup:"91-180"|floatformat:2|default:"0" }},
+    {{ kpis.ageing_summary|lookup:"180+"|floatformat:2|default:"0" }},
+];
+new Chart(document.getElementById('ageingChart'), {
+    type: 'doughnut',
+    data: { labels: ageingLabels, datasets: [{ data: ageingValues, backgroundColor: ['#28a745','#ffc107','#fd7e14','#dc3545','#6f42c1','#343a40'] }] },
+    options: { responsive: true }
+});
+</script>
+{% endblock %}

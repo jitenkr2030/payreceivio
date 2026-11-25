@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1><i class="bi bi-robot"></i> AI Collections Assistant</h1>
+        <p class="text-muted">Ask questions about your receivables in natural language.</p>
+        <div class="card mb-3" style="max-height:500px;overflow-y:auto">
+            <div class="card-body">
+                {% for m in messages %}
+                <div class="mb-3 {% if m.role == 'user' %}text-end{% endif %}">
+                    <span class="badge bg-{% if m.role == 'user' %}primary{% else %}secondary{% endif %}">{{ m.role|title }}</span>
+                    <div class="alert {% if m.role == 'user' %}alert-primary{% else %}alert-light{% endif %} mt-1">{{ m.content|linebreaksbr }}</div>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-robot" style="font-size:3rem"></i>
+                    <p>Ask me anything about your receivables.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <form method="post">{% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="question" class="form-control" placeholder="Ask a question..." required>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-send"></i> Ask</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <h5>Suggested Questions</h5>
+        <div class="list-group">
+            {% for q in suggested_questions %}
+            <form method="post" class="list-group-item list-group-item-action">{% csrf_token %}
+                <input type="hidden" name="question" value="{{ q }}">
+                <button type="submit" class="btn btn-link text-start p-0">{{ q }}</button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

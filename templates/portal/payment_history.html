@@ -1,0 +1,6 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Payment History</h1>
+<table class="table"><tr><th>Date</th><th>Receipt #</th><th>Method</th><th class="text-end">Amount</th></tr>
+{% for p in payments %}<tr><td>{{ p.payment_date }}</td><td>{{ p.payment_number }}</td><td>{{ p.get_payment_method_display }}</td><td class="text-end">{{ p.amount }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

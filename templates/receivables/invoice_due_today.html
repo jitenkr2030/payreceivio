@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% load humanize %}
+{% block content %}
+<h1><i class="bi bi-calendar-day text-warning"></i> Due Today</h1>
+<table class="table">
+<thead><tr><th>Invoice #</th><th>Customer</th><th class="text-end">Outstanding</th></tr></thead>
+<tbody>
+{% for i in invoices %}
+<tr><td><a href="{% url 'receivables:invoice_detail' i.pk %}">{{ i.invoice_number }}</a></td><td>{{ i.customer.name }}</td><td class="text-end">{{ CURRENCY_SYMBOL }}{{ i.outstanding_amount|floatformat:2|intcomma }}</td></tr>
+{% empty %}<tr><td colspan="3" class="text-center text-muted">None due today</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endblock %}

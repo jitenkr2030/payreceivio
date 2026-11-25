@@ -1,0 +1,4 @@
+{% extends "base/base.html" %}
+{% block content %}<div class="d-flex justify-content-between mb-3"><h1>Documents</h1><a href="{% url 'documents:create' %}" class="btn btn-primary">Upload</a></div>
+<table class="table"><tr><th>Name</th><th>Type</th><th>Customer</th><th>Shared</th><th>Created</th></tr>{% for d in documents %}<tr><td><a href="{% url 'documents:detail' d.pk %}">{{ d.name }}</a></td><td>{{ d.get_doc_type_display }}</td><td>{{ d.customer.name|default:'-' }}</td><td>{% if d.is_shared %}<i class="bi bi-check-circle text-success"></i>{% endif %}</td><td>{{ d.created_at|date:"d M Y" }}</td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No documents</td></tr>{% endfor %}</table>
+{% endblock %}

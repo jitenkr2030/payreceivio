@@ -1,0 +1,34 @@
+{% extends "base/base.html" %}
+{% block title %}Login - {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-3"><i class="bi bi-cash-coin text-primary"></i> {{ APP_NAME }}</h3>
+                <p class="text-center text-muted">Sign in to your account</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        {{ form.password }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <a href="{% url 'accounts:signup' %}">Sign up for a new organization</a><br>
+                    <a href="{% url 'portal:login' %}">Customer portal login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>{% if form.instance.pk %}Edit Invoice{% else %}New Invoice{% endif %}</h1>
+<form method="post">{% csrf_token %}
+<div class="row g-3">
+    <div class="col-md-3"><label class="form-label">Invoice Number</label>{{ form.invoice_number }}</div>
+    <div class="col-md-5"><label class="form-label">Customer</label>{{ form.customer }}</div>
+    <div class="col-md-2"><label class="form-label">Invoice Date</label>{{ form.invoice_date }}</div>
+    <div class="col-md-2"><label class="form-label">Due Date</label>{{ form.due_date }}</div>
+    <div class="col-md-3"><label class="form-label">Subtotal</label>{{ form.subtotal }}</div>
+    <div class="col-md-3"><label class="form-label">Tax</label>{{ form.tax_amount }}</div>
+    <div class="col-md-3"><label class="form-label">Adjustment</label>{{ form.adjustment }}</div>
+    <div class="col-md-3"><label class="form-label">Currency</label>{{ form.currency }}</div>
+    <div class="col-md-4"><label class="form-label">Salesperson</label>{{ form.salesperson }}</div>
+    <div class="col-md-4"><label class="form-label">Status</label>{{ form.status }}</div>
+    <div class="col-md-4"><label class="form-label">Payment Terms</label>{{ form.payment_terms }}</div>
+    <div class="col-md-12"><label class="form-label">Notes</label>{{ form.notes }}</div>
+</div>
+<button class="btn btn-primary mt-3">Save</button>
+<a href="{% url 'receivables:invoice_list' %}" class="btn btn-outline-secondary mt-3">Cancel</a>
+</form>
+{% endblock %}

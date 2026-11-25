@@ -1,0 +1,53 @@
+{% extends "base/base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1><i class="bi bi-credit-card"></i> Payments</h1>
+    <div>
+        <a href="{% url 'payments:link_create' %}" class="btn btn-outline-primary">Generate Payment Link</a>
+        <a href="{% url 'payments:create' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Record Payment</a>
+    </div>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5"><input name="q" value="{{ q }}" class="form-control" placeholder="Search reference or customer..."></div>
+    <div class="col-md-3"><select name="status" class="form-select">
+        <option value="">All status</option>
+        <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+        <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="failed" {% if status == 'failed' %}selected{% endif %}>Failed</option>
+    </select></div>
+    <div class="col-md-3"><select name="method" class="form-select">
+        <option value="">All methods</option>
+        <option value="upi" {% if method == 'upi' %}selected{% endif %}>UPI</option>
+        <option value="neft" {% if method == 'neft' %}selected{% endif %}>NEFT</option>
+        <option value="rtgs" {% if method == 'rtgs' %}selected{% endif %}>RTGS</option>
+        <option value="cheque" {% if method == 'cheque' %}selected{% endif %}>Cheque</option>
+        <option value="cash" {% if method == 'cash' %}selected{% endif %}>Cash</option>
+    </select></div>
+    <div class="col-md-1"><button class="btn btn-outline-primary">Go</button></div>
+</form>
+<div class="card"><div class="card-body">
+<table class="table table-hover">
+<thead><tr><th>Receipt #</th><th>Customer</th><th>Date</th><th>Method</th><th>Reference</th><th class="text-end">Amount</th><th>Status</th><th>Reconciled</th></tr></thead>
+<tbody>
+{% for p in payments %}
+<tr>
+    <td><a href="{% url 'payments:detail' p.pk %}">{{ p.payment_number }}</a></td>
+    <td>{{ p.customer.name }}</td>
+    <td>{{ p.payment_date|date:"d M Y" }}</td>
+    <td><span class="badge bg-secondary">{{ p.get_payment_method_display }}</span></td>
+    <td>{{ p.reference|default:"-" }}</td>
+    <td class="text-end">{{ CURRENCY_SYMBOL }}{{ p.amount|floatformat:2|intcomma }}</td>
+    <td><span class="badge bg-{% if p.status == 'confirmed' %}success{% elif p.status == 'failed' %}danger{% else %}warning{% endif %}">{{ p.get_status_display }}</span></td>
+    <td>{% if p.is_reconciled %}<i class="bi bi-check-circle text-success"></i>{% else %}<i class="bi bi-circle text-muted"></i>{% endif %}</td>
+</tr>
+{% empty %}<tr><td colspan="8" class="text-center text-muted py-3">No payments</td></tr>{% endfor %}
+</tbody>
+</table>
+</div></div>
+{% if is_paginated %}<nav><ul class="pagination">
+{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>{% endif %}
+<li class="page-item active"><a class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</a></li>
+{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+</ul></nav>{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Match Bank Transaction</h1>
+<div class="card mb-3"><div class="card-body">
+<p><strong>Date:</strong> {{ txn.transaction_date }}</p>
+<p><strong>Amount:</strong> {{ txn.amount }}</p>
+<p><strong>Description:</strong> {{ txn.description }}</p>
+<p><strong>UTR:</strong> {{ txn.utr_number|default:"-" }}</p>
+</div></div>
+<h3>Suggested Payments</h3>
+<form method="post">{% csrf_token %}
+<table class="table">
+<thead><tr><th>Receipt #</th><th>Customer</th><th>Date</th><th class="text-end">Amount</th><th>Action</th></tr></thead>
+<tbody>
+{% for p in candidates %}
+<tr><td>{{ p.payment_number }}</td><td>{{ p.customer.name }}</td><td>{{ p.payment_date }}</td><td class="text-end">{{ p.amount }}</td><td><button type="submit" name="payment_id" value="{{ p.id }}" class="btn btn-sm btn-success">Approve Match</button></td></tr>
+{% empty %}<tr><td colspan="5" class="text-center text-muted">No matching payments found</td></tr>{% endfor %}
+</tbody>
+</table>
+</form>
+{% endblock %}

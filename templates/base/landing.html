@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+{% block title %}{{ APP_NAME }} - Collect Smarter. Get Paid Faster.{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+    <div class="display-5 fw-bold text-primary mb-3">PayReceivio</div>
+    <h1 class="display-6 mb-3">Universal Receivables & Payment Collection Platform</h1>
+    <p class="lead text-muted mb-4">Collect Smarter. Get Paid Faster.</p>
+    <p class="mb-4">Multi-tenant SaaS platform that helps businesses manage customer outstanding balances,
+    automate payment follow-ups, collect payments, reconcile transactions and synchronise receipts
+    with their existing accounting and ERP software.</p>
+    <div class="d-flex justify-content-center gap-3">
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:home' %}" class="btn btn-primary btn-lg">Open Dashboard</a>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg">Login</a>
+        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary btn-lg">Start Free Trial</a>
+        <a href="{% url 'portal:login' %}" class="btn btn-outline-secondary btn-lg">Customer Portal</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5 g-4">
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-link-45deg display-5 text-primary"></i><h5 class="mt-3">Connect</h5><p class="text-muted small">Accounting integrations with TallyPrime, Zoho Books, BUSY, Marg, QuickBooks, Xero and more.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-receipt display-5 text-primary"></i><h5 class="mt-3">Receivables</h5><p class="text-muted small">Centralised invoice and outstanding management with ageing analysis.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-credit-card display-5 text-primary"></i><h5 class="mt-3">Collect</h5><p class="text-muted small">UPI, NEFT, RTGS, IMPS, cheques, payment links, dynamic QR codes.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-chat-dots display-5 text-primary"></i><h5 class="mt-3">Engage</h5><p class="text-muted small">WhatsApp-first customer communication with automated reminder sequences.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-bank2 display-5 text-primary"></i><h5 class="mt-3">Reconcile</h5><p class="text-muted small">Bank statement import, automated invoice matching, UTR matching.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-shield-check display-5 text-primary"></i><h5 class="mt-3">Credit</h5><p class="text-muted small">Credit limit management, payment reliability scoring, risk alerts.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-graph-up display-5 text-primary"></i><h5 class="mt-3">Intelligence</h5><p class="text-muted small">Real-time dashboards, DSO, collection forecasts, salesperson performance.</p></div></div>
+    <div class="col-md-3"><div class="card h-100 text-center p-4"><i class="bi bi-robot display-5 text-primary"></i><h5 class="mt-3">AI Assistant</h5><p class="text-muted small">Natural-language receivables queries with cited transactions.</p></div></div>
+</div>
+{% endblock %}

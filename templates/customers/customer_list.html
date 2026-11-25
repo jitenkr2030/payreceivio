@@ -1,0 +1,63 @@
+{% extends "base/base.html" %}
+{% load humanize %}
+{% block title %}Customers - {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1><i class="bi bi-people"></i> Customers</h1>
+    <div>
+        <a href="{% url 'customers:import' %}" class="btn btn-outline-secondary"><i class="bi bi-upload"></i> Import CSV</a>
+        <a href="{% url 'customers:create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Customer</a>
+    </div>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5"><input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by name, code, phone, GST..."></div>
+    <div class="col-md-3">
+        <select name="risk" class="form-select">
+            <option value="">All risk levels</option>
+            <option value="low" {% if risk == "low" %}selected{% endif %}>Low</option>
+            <option value="medium" {% if risk == "medium" %}selected{% endif %}>Medium</option>
+            <option value="high" {% if risk == "high" %}selected{% endif %}>High</option>
+            <option value="blocked" {% if risk == "blocked" %}selected{% endif %}>Blocked</option>
+        </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Search</button></div>
+</form>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Code</th><th>Name</th><th>Phone</th><th>GST</th>
+                    <th>Credit Limit</th><th>Risk</th><th class="text-end">Outstanding</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in customers %}
+                <tr>
+                    <td><code>{{ c.code }}</code></td>
+                    <td><a href="{% url 'customers:detail' c.pk %}">{{ c.name }}</a></td>
+                    <td>{{ c.phone|default:"-" }}</td>
+                    <td>{{ c.gst_number|default:"-" }}</td>
+                    <td>{{ CURRENCY_SYMBOL }}{{ c.credit_limit|floatformat:0|intcomma }}</td>
+                    <td><span class="badge bg-{% if c.risk_category == 'low' %}success{% elif c.risk_category == 'medium' %}warning{% elif c.risk_category == 'high' %}danger{% else %}dark{% endif %}">{{ c.get_risk_category_display }}</span></td>
+                    <td class="text-end">{{ CURRENCY_SYMBOL }}{{ c.outstanding_balance|floatformat:2|intcomma }}</td>
+                    <td><a href="{% url 'customers:detail' c.pk %}" class="btn btn-sm btn-outline-primary">View</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="text-center text-muted py-4">No customers found. <a href="{% url 'customers:create' %}">Add your first customer</a>.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav><ul class="pagination">
+    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&risk={{ risk }}">Previous</a></li>{% endif %}
+    <li class="page-item active"><a class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</a></li>
+    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&risk={{ risk }}">Next</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

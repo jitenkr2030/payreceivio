@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load common_tags %}
+{% load humanize %}
+{% block title %}{{ customer.name }} Statement - {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1>Account Statement: {{ customer.name }}</h1>
+    <button onclick="window.print()" class="btn btn-outline-primary"><i class="bi bi-printer"></i> Print</button>
+</div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3"><input type="date" name="from_date" value="{{ from_date|date:'Y-m-d' }}" class="form-control"></div>
+    <div class="col-md-3"><input type="date" name="to_date" value="{{ to_date|date:'Y-m-d' }}" class="form-control"></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary">Apply Filter</button></div>
+</form>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Opening Balance:</strong> {{ CURRENCY_SYMBOL }}{{ opening_balance|floatformat:2|intcomma }} <span class="text-muted">as of {{ from_date|default:"start" }}</span></p>
+        <table class="table table-sm">
+            <thead><tr><th>Date</th><th>Type</th><th>Reference</th><th>Description</th><th class="text-end">Debit</th><th class="text-end">Credit</th><th class="text-end">Balance</th></tr></thead>
+            <tbody>
+                {% for e in entries %}
+                <tr>
+                    <td>{{ e.date|date:"d M Y" }}</td>
+                    <td>{{ e.type }}</td>
+                    <td>{{ e.reference }}</td>
+                    <td>{{ e.description }}</td>
+                    <td class="text-end">{% if e.debit %}{{ CURRENCY_SYMBOL }}{{ e.debit|floatformat:2|intcomma }}{% endif %}</td>
+                    <td class="text-end">{% if e.credit %}{{ CURRENCY_SYMBOL }}{{ e.credit|floatformat:2|intcomma }}{% endif %}</td>
+                    <td class="text-end">{{ CURRENCY_SYMBOL }}{{ e.balance|floatformat:2|intcomma }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted">No entries in this period</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot><tr class="table-dark">
+                <td colspan="6"><strong>Closing Balance</strong></td>
+                <td class="text-end"><strong>{{ CURRENCY_SYMBOL }}{{ closing_balance|floatformat:2|intcomma }}</strong></td>
+            </tr></tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

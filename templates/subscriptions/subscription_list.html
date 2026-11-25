@@ -1,0 +1,12 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Your Subscription</h1>
+{% for s in subscriptions %}
+<div class="card mb-3"><div class="card-body">
+<h4>{{ s.plan.label }}</h4>
+<p>Status: <span class="badge bg-{% if s.status == 'active' %}success{% elif s.status == 'trial' %}info{% else %}danger{% endif %}">{{ s.get_status_display }}</span></p>
+<p>Billing: {{ s.get_billing_cycle_display }}</p>
+<p>Started: {{ s.started_at|date:"d M Y" }}</p>
+{% if s.current_period_end %}<p>Renews: {{ s.current_period_end|date:"d M Y" }}</p>{% endif %}
+</div></div>
+{% empty %}<div class="alert alert-info">No active subscription.</div>{% endfor %}
+{% endblock %}

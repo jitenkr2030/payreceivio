@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Companies</h1><table class="table"><tr><th>Name</th><th>GST</th><th>Active</th></tr>{% for c in companies %}<tr><td>{{ c.name }}</td><td>{{ c.gst_number }}</td><td>{% if c.is_active %}<i class="bi bi-check-circle text-success"></i>{% endif %}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No companies</td></tr>{% endfor %}</table>{% endblock %}

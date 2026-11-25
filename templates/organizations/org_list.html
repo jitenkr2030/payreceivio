@@ -1,0 +1,4 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Your Organizations</h1>
+<table class="table"><tr><th>Name</th><th>Plan</th><th>Active</th></tr>{% for o in organizations %}<tr><td>{{ o.name }}</td><td>{{ o.subscription_plan }}</td><td>{% if o.is_active %}<i class="bi bi-check-circle text-success"></i>{% endif %}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No organizations</td></tr>{% endfor %}</table>
+{% endblock %}

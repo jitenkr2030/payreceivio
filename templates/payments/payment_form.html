@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Record Payment</h1>
+<form method="post">{% csrf_token %}
+<div class="row g-3">
+    <div class="col-md-6"><label class="form-label">Customer</label>{{ form.customer }}</div>
+    <div class="col-md-3"><label class="form-label">Payment Date</label>{{ form.payment_date }}</div>
+    <div class="col-md-3"><label class="form-label">Amount</label>{{ form.amount }}</div>
+    <div class="col-md-4"><label class="form-label">Method</label>{{ form.payment_method }}</div>
+    <div class="col-md-4"><label class="form-label">Type</label>{{ form.payment_type }}</div>
+    <div class="col-md-4"><label class="form-label">Reference (UTR/Cheque)</label>{{ form.reference }}</div>
+    <div class="col-md-4"><label class="form-label">Bank Name</label>{{ form.bank_name }}</div>
+    <div class="col-md-4"><label class="form-label">Cheque Number</label>{{ form.cheque_number }}</div>
+    <div class="col-md-4"><label class="form-label">Cheque Date</label>{{ form.cheque_date }}</div>
+    <div class="col-md-12"><label class="form-label">Notes</label>{{ form.notes }}</div>
+</div>
+<button class="btn btn-success mt-3">Record Payment</button>
+<a href="{% url 'payments:list' %}" class="btn btn-outline-secondary mt-3">Cancel</a>
+</form>
+{% endblock %}

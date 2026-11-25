@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1 class="mb-4">{% if form.instance.pk %}Edit Customer{% else %}New Customer{% endif %}</h1>
+<form method="post">{% csrf_token %}
+    <div class="card mb-4"><div class="card-header">Basic Information</div><div class="card-body row g-3">
+        <div class="col-md-2"><label class="form-label">Code *</label>{{ form.code }}</div>
+        <div class="col-md-6"><label class="form-label">Name *</label>{{ form.name }}</div>
+        <div class="col-md-4"><label class="form-label">Legal Name</label>{{ form.legal_name }}</div>
+        <div class="col-md-3"><label class="form-label">Type</label>{{ form.customer_type }}</div>
+        <div class="col-md-3"><label class="form-label">Email</label>{{ form.email }}</div>
+        <div class="col-md-3"><label class="form-label">Phone</label>{{ form.phone }}</div>
+        <div class="col-md-3"><label class="form-label">WhatsApp</label>{{ form.whatsapp_number }}</div>
+        <div class="col-md-3"><label class="form-label">GST</label>{{ form.gst_number }}</div>
+        <div class="col-md-3"><label class="form-label">PAN</label>{{ form.pan_number }}</div>
+    </div></div>
+
+    <div class="card mb-4"><div class="card-header">Address</div><div class="card-body row g-3">
+        <div class="col-md-12"><label class="form-label">Billing Address</label>{{ form.billing_address }}</div>
+        <div class="col-md-12"><label class="form-label">Shipping Address</label>{{ form.shipping_address }}</div>
+        <div class="col-md-3"><label class="form-label">City</label>{{ form.city }}</div>
+        <div class="col-md-3"><label class="form-label">State</label>{{ form.state }}</div>
+        <div class="col-md-3"><label class="form-label">Country</label>{{ form.country }}</div>
+        <div class="col-md-3"><label class="form-label">Postal Code</label>{{ form.postal_code }}</div>
+    </div></div>
+
+    <div class="card mb-4"><div class="card-header">Financial</div><div class="card-body row g-3">
+        <div class="col-md-3"><label class="form-label">Credit Limit</label>{{ form.credit_limit }}</div>
+        <div class="col-md-3"><label class="form-label">Credit Period (days)</label>{{ form.credit_period_days }}</div>
+        <div class="col-md-3"><label class="form-label">Opening Balance</label>{{ form.opening_balance }}</div>
+        <div class="col-md-3"><label class="form-label">Opening Balance Date</label>{{ form.opening_balance_date }}</div>
+        <div class="col-md-4"><label class="form-label">Salesperson</label>{{ form.salesperson }}</div>
+        <div class="col-md-4"><label class="form-label">Territory</label>{{ form.territory }}</div>
+        <div class="col-md-4"><label class="form-label">Department</label>{{ form.department }}</div>
+        <div class="col-md-4"><label class="form-label">Payment Terms</label>{{ form.payment_terms }}</div>
+        <div class="col-md-4"><label class="form-label">Preferred Payment Method</label>{{ form.preferred_payment_method }}</div>
+        <div class="col-md-4"><label class="form-label">Risk Category</label>{{ form.risk_category }}</div>
+    </div></div>
+
+    <div class="card mb-4"><div class="card-header">Communication Preferences</div><div class="card-body row g-3">
+        <div class="col-md-4"><div class="form-check">{{ form.opt_in_email }} <label class="form-check-label">Email</label></div></div>
+        <div class="col-md-4"><div class="form-check">{{ form.opt_in_sms }} <label class="form-check-label">SMS</label></div></div>
+        <div class="col-md-4"><div class="form-check">{{ form.opt_in_whatsapp }} <label class="form-check-label">WhatsApp</label></div></div>
+        <div class="col-md-4"><div class="form-check">{{ form.is_active }} <label class="form-check-label">Active</label></div></div>
+    </div></div>
+
+    <button type="submit" class="btn btn-primary">Save Customer</button>
+    <a href="{% url 'customers:list' %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

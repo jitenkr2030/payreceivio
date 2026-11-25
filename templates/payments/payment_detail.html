@@ -1,0 +1,42 @@
+{% extends "base/base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1><i class="bi bi-credit-card"></i> Payment {{ payment.payment_number }}</h1>
+    {% if payment.unallocated_amount > 0 %}<a href="{% url 'payments:allocate' payment.pk %}" class="btn btn-warning">Allocate to Invoices</a>{% endif %}
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card text-white bg-success"><div class="card-body">
+        <div class="small">Amount</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ payment.amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card text-white bg-primary"><div class="card-body">
+        <div class="small">Allocated</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ payment.allocated_amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card text-white {% if payment.unallocated_amount > 0 %}bg-warning{% else %}bg-info{% endif %}"><div class="card-body">
+        <div class="small">Unallocated</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ payment.unallocated_amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+</div>
+<div class="card"><div class="card-header">Payment Details</div><div class="card-body">
+<table class="table">
+<tr><th>Customer</th><td><a href="{% url 'customers:detail' payment.customer_id %}">{{ payment.customer.name }}</a></td></tr>
+<tr><th>Date</th><td>{{ payment.payment_date|date:"d M Y" }}</td></tr>
+<tr><th>Method</th><td>{{ payment.get_payment_method_display }}</td></tr>
+<tr><th>Type</th><td>{{ payment.get_payment_type_display }}</td></tr>
+<tr><th>Reference</th><td>{{ payment.reference|default:"-" }}</td></tr>
+<tr><th>Bank</th><td>{{ payment.bank_name|default:"-" }}</td></tr>
+<tr><th>Cheque Number</th><td>{{ payment.cheque_number|default:"-" }}</td></tr>
+<tr><th>Receipt Number</th><td>{{ payment.receipt_number|default:"-" }}</td></tr>
+<tr><th>Status</th><td><span class="badge bg-{% if payment.status == 'confirmed' %}success{% elif p.status == 'failed' %}danger{% else %}warning{% endif %}">{{ payment.get_status_display }}</span></td></tr>
+<tr><th>Reconciled</th><td>{% if payment.is_reconciled %}Yes (with bank txn {{ payment.reconciled_with_id }}){% else %}No{% endif %}</td></tr>
+<tr><th>Accounting Sync</th><td>{% if payment.is_synced %}Synced ({{ payment.accounting_ref }}){% else %}Not synced{% endif %}</td></tr>
+</table>
+</div></div>
+<div class="card mt-3"><div class="card-header">Invoice Allocations</div><div class="card-body">
+<table class="table table-sm">
+<thead><tr><th>Invoice #</th><th class="text-end">Amount Allocated</th><th>Allocated By</th></tr></thead>
+<tbody>
+{% for a in allocations %}<tr><td><a href="{% url 'receivables:invoice_detail' a.invoice_id %}">{{ a.invoice.invoice_number }}</a></td><td class="text-end">{{ CURRENCY_SYMBOL }}{{ a.amount|floatformat:2|intcomma }}</td><td>{{ a.allocated_by.display_name|default:"-" }}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No allocations</td></tr>{% endfor %}
+</tbody>
+</table>
+</div></div>
+{% endblock %}

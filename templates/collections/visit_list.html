@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Field Visits</h1><table class="table"><tr><th>Customer</th><th>Salesperson</th><th>Planned</th><th>Checked In</th><th>Status</th></tr>{% for v in visits %}<tr><td>{{ v.customer.name }}</td><td>{{ v.salesperson.display_name|default:'-' }}</td><td>{{ v.planned_at }}</td><td>{{ v.checked_in_at }}</td><td>{{ v.status }}</td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No visits</td></tr>{% endfor %}</table>{% endblock %}

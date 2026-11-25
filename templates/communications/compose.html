@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Compose Message</h1>
+<form method="post">{% csrf_token %}
+<div class="row g-3">
+    <div class="col-md-6"><label>Customer</label><select name="customer" class="form-select" required>{% for c in customers %}<option value="{{ c.id }}">{{ c.name }} ({{ c.code }})</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label>Template</label><select name="template" class="form-select"><option value="">None</option>{% for t in templates %}<option value="{{ t.id }}">{{ t.name }} ({{ t.get_channel_display }})</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label>Channel</label><select name="channel" class="form-select"><option value="email">Email</option><option value="sms">SMS</option><option value="whatsapp">WhatsApp</option></select></div>
+    <div class="col-md-12"><label>Subject</label><input name="subject" class="form-control"></div>
+    <div class="col-md-12"><label>Body</label><textarea name="body" class="form-control" rows="8"></textarea></div>
+</div>
+<button class="btn btn-primary mt-3">Send</button>
+</form>
+{% endblock %}

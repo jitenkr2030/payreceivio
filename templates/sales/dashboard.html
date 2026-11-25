@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Salesperson Dashboard</h1>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-white bg-success"><div class="card-body"><div class="small">Collected Today</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ collected_today|floatformat:0 }}</div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="small text-muted">My Customers</div><div class="h3">{{ customers|length }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-primary"><div class="card-body"><div class="small">Open Tasks</div><div class="h3">{{ open_tasks|length }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-warning"><div class="card-body"><div class="small">Today's Visits</div><div class="h3">{{ today_visits|length }}</div></div></div></div>
+</div>
+<h3>Open Tasks</h3><table class="table"><tr><th>Task</th><th>Customer</th><th>Due</th></tr>{% for t in open_tasks %}<tr><td>{{ t.title }}</td><td>{{ t.customer.name }}</td><td>{{ t.due_date }}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No open tasks</td></tr>{% endfor %}</table>
+<h3>My Customers</h3><table class="table"><tr><th>Name</th><th>Code</th><th>Outstanding</th></tr>{% for c in customers %}<tr><td>{{ c.name }}</td><td>{{ c.code }}</td><td>{{ c.outstanding_balance }}</td></tr>{% endfor %}</table>
+{% endblock %}

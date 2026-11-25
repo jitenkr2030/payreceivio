@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>{{ document.name }}</h1><p>Type: {{ document.get_doc_type_display }}</p><p>Customer: {{ document.customer.name|default:'-' }}</p>{% if document.file %}<a href="{{ document.file.url }}" class="btn btn-primary">Download</a>{% endif %}{% endblock %}

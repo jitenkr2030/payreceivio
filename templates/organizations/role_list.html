@@ -1,0 +1,3 @@
+{% extends "base/base.html" %}
+{% block content %}<div class="d-flex justify-content-between mb-3"><h1>User Roles</h1><a href="{% url 'organizations:role_create' %}" class="btn btn-primary">Assign Role</a></div>
+<table class="table"><tr><th>User</th><th>Role</th><th>Company</th><th>Active</th></tr>{% for a in assignments %}<tr><td>{{ a.user.display_name }}</td><td>{{ a.role.label }}</td><td>{{ a.company.name|default:'All' }}</td><td>{% if a.is_active %}<i class="bi bi-check-circle text-success"></i>{% endif %}</td></tr>{% empty %}<tr><td colspan="4" class="text-center text-muted">No roles assigned</td></tr>{% endfor %}</table>{% endblock %}

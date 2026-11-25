@@ -1,0 +1,122 @@
+{% extends "base/base.html" %}
+{% load common_tags %}
+{% block content %}
+<a href="{% url 'accounting_connectors:list' %}" class="btn btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> All Connectors</a>
+<h1>{{ connector_docs.label }}</h1>
+<p class="text-muted">Vendor: {{ connector_docs.vendor }} | Auth: {{ connector_docs.auth }}</p>
+
+<div class="card mb-4">
+    <div class="card-header">Connection Configuration</div>
+    <div class="card-body">
+        <table class="table table-sm">
+            <tr><th>Endpoint</th><td><code>{{ connector_docs.url }}</code></td></tr>
+            <tr><th>Auth Method</th><td>{{ connector_docs.auth }}</td></tr>
+            <tr><th>Vendor</th><td>{{ connector_docs.vendor }}</td></tr>
+            <tr><th>Supported Entities</th><td>{{ connector_docs.entities|join:", " }}</td></tr>
+        </table>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Setup Instructions</div>
+    <div class="card-body">
+        {% if connector_name == 'busy' %}
+        <p>1. Install BUSY 21+ with the API add-on.</p>
+        <p>2. In BUSY: Settings → API Settings → Enable API Server on port 5400.</p>
+        <p>3. Generate an API token in BUSY.</p>
+        <p>4. In PayReceivio: Add connection with api_url, company_code, and api_token.</p>
+        {% elif connector_name == 'marg' %}
+        <p>1. Install Marg ERP with the Marg API Server add-on (port 8999).</p>
+        <p>2. Generate an API key in Marg → Utility → API Settings.</p>
+        <p>3. In PayReceivio: Add connection with api_url, company_code, and api_key.</p>
+        {% elif connector_name == 'quickbooks' %}
+        <p>1. Create an Intuit Developer app at <a href="https://developer.intuit.com">developer.intuit.com</a>.</p>
+        <p>2. Configure redirect URI to <code>{{ request.scheme }}://{{ request.get_host }}{% url 'accounting_connectors:docs' 'quickbooks' %}</code>.</p>
+        <p>3. Use the OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>4. Store client_id, client_secret, refresh_token, realm_id, environment in the connection.</p>
+        {% elif connector_name == 'xero' %}
+        <p>1. Create a Xero app at <a href="https://developer.xero.com">developer.xero.com</a>.</p>
+        <p>2. Configure redirect URI and grant scopes: <code>accounting.transactions accounting.contacts</code>.</p>
+        <p>3. Complete OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>4. Store client_id, client_secret, refresh_token, tenant_id in the connection.</p>
+        {% elif connector_name == 'sage' %}
+        <p>1. Register a Sage developer app at <a href="https://developer.sage.com">developer.sage.com</a>.</p>
+        <p>2. Subscribe to Sage Business Cloud Accounting.</p>
+        <p>3. Complete OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>4. Store client_id, client_secret, refresh_token, region in the connection.</p>
+        {% elif connector_name == 'dynamics365' %}
+        <p>1. Register an app in Azure AD (Entra ID).</p>
+        <p>2. Grant API permissions for Dynamics 365 Business Central.</p>
+        <p>3. Create a client secret and note the application (client) ID.</p>
+        <p>4. Complete OAuth 2.0 flow with the tenant_id.</p>
+        <p>5. Store client_id, client_secret, refresh_token, tenant_id, environment, company_id in the connection.</p>
+        {% elif connector_name == 'netsuite' %}
+        <p>1. In NetSuite: Setup → Integration → OAuth 2.0 Client Credentials.</p>
+        <p>2. Create an integration record with OAuth 2.0 enabled.</p>
+        <p>3. Generate client_id and client_secret.</p>
+        <p>4. Complete OAuth flow to obtain refresh_token.</p>
+        <p>5. Store client_id, client_secret, refresh_token, account_id in the connection.</p>
+        {% elif connector_name == 'sap_b1' %}
+        <p>1. Enable Service Layer on the SAP B1 server (HTTP 50000 / HTTPS 50001).</p>
+        <p>2. Create a user with appropriate permissions in B1.</p>
+        <p>3. In PayReceivio: Add connection with host, port, company_db, username, password.</p>
+        <p>4. The connector will manage session cookies automatically.</p>
+        {% elif connector_name == 'odoo' %}
+        <p>1. In Odoo: Settings → General Settings → Developer mode → Generate API key for the integration user.</p>
+        <p>2. Note the database name and the URL.</p>
+        <p>3. In PayReceivio: Add connection with host, database, username, api_key.</p>
+        <p>4. Configure journal_id and default_payment_method_line_id for receipt posting.</p>
+        {% elif connector_name == 'myob' %}
+        <p>1. Register a MYOB developer app at <a href="https://developer.myob.com">developer.myob.com</a>.</p>
+        <p>2. Complete OAuth 2.0 flow with company file access.</p>
+        <p>3. Store client_id, client_secret, refresh_token, company_file_uid in the connection.</p>
+        {% elif connector_name == 'freshbooks' %}
+        <p>1. Register a FreshBooks app at <a href="https://www.freshbooks.com/api">freshbooks.com/api</a>.</p>
+        <p>2. Complete OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>3. Store client_id, client_secret, refresh_token, account_id in the connection.</p>
+        {% elif connector_name == 'wave' %}
+        <p>1. Register a Wave developer app at <a href="https://developer.wave.com">developer.wave.com</a>.</p>
+        <p>2. Complete OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>3. Store client_id, client_secret, refresh_token, business_id in the connection.</p>
+        <p>4. This connector uses the Wave GraphQL API.</p>
+        {% elif connector_name == 'gofrugal' %}
+        <p>1. Install GoFrugal HappyConnect on the GoFrugal server.</p>
+        <p>2. Generate an API key in GoFrugal → Settings → API.</p>
+        <p>3. In PayReceivio: Add connection with host, port, store_code, api_key.</p>
+        {% elif connector_name == 'focus' %}
+        <p>1. Enable Focus iConnect REST API on the Focus server.</p>
+        <p>2. Create a JWT-enabled user in Focus.</p>
+        <p>3. Complete the Focus OAuth flow to obtain refresh_token.</p>
+        <p>4. In PayReceivio: Add connection with host, port, company_code, refresh_token.</p>
+        {% elif connector_name == 'exact' %}
+        <p>1. Register an Exact Online app at <a href="https://apps.exactonline.com">apps.exactonline.com</a>.</p>
+        <p>2. Complete OAuth 2.0 flow with the appropriate region (nl/be/de/uk/us).</p>
+        <p>3. Store client_id, client_secret, refresh_token, region, division in the connection.</p>
+        {% elif connector_name == 'autocount' %}
+        <p>1. Install AutoCount Task Server on the AutoCount machine.</p>
+        <p>2. Generate an API key in AutoCount → Settings → API.</p>
+        <p>3. In PayReceivio: Add connection with host, port, database_name, api_key.</p>
+        {% elif connector_name == 'money_forward' %}
+        <p>1. Register a Money Forward developer app at <a href="https://developer.moneyforward.com">developer.moneyforward.com</a>.</p>
+        <p>2. Complete OAuth 2.0 flow to obtain refresh_token.</p>
+        <p>3. Store client_id, client_secret, refresh_token, office_id in the connection.</p>
+        {% else %}
+        <p>Setup instructions for {{ connector_name }} are not yet documented.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Supported Operations</div>
+    <div class="card-body">
+        <ul>
+            <li>Authenticate connection</li>
+            <li>Test connection (verify credentials)</li>
+            <li>Fetch customers (with optional <code>since</code> delta sync)</li>
+            <li>Fetch outstanding invoices</li>
+            <li>Fetch receipts</li>
+            <li>Post receipt (write-back) with bill-wise allocation</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

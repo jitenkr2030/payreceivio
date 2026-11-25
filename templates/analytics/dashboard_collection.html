@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Collection Team Dashboard</h1>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-white bg-primary"><div class="card-body"><div class="small">Open Tasks</div><div class="h3">{{ open_tasks }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-danger"><div class="card-body"><div class="small">Overdue Tasks</div><div class="h3">{{ overdue_tasks }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-warning"><div class="card-body"><div class="small">Total Overdue Receivables</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ kpis.total_overdue|floatformat:0 }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-info"><div class="card-body"><div class="small">Overdue Customers</div><div class="h3">{{ kpis.overdue_customer_count }}</div></div></div></div>
+</div>
+<a href="{% url 'collections:task_list' %}" class="btn btn-primary">View Tasks</a>
+<a href="{% url 'reconciliation:unmatched' %}" class="btn btn-outline-primary">Reconcile Payments</a>
+{% endblock %}

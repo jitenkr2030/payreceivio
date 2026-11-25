@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Promises to Pay</h1>
+<a href="{% url 'collections:promise_create' %}" class="btn btn-primary mb-3">New Promise</a>
+<table class="table">
+<thead><tr><th>Customer</th><th>Amount</th><th>Promised Date</th><th>Status</th></tr></thead>
+<tbody>
+{% for p in promises %}
+<tr><td>{{ p.customer.name }}</td><td>{{ p.amount }}</td><td>{{ p.promised_date }}</td><td><span class="badge bg-{% if p.status == 'fulfilled' %}success{% elif p.status == 'broken' %}danger{% else %}warning{% endif %}">{{ p.status }}</span></td></tr>
+{% empty %}<tr><td colspan="4" class="text-center text-muted">No promises</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endblock %}

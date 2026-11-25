@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Message</h1>
+<div class="card mb-3"><div class="card-body">
+<p><strong>To:</strong> {{ message.to_address }}</p>
+<p><strong>Subject:</strong> {{ message.subject }}</p>
+<p><strong>Channel:</strong> {{ message.get_channel_display }}</p>
+<p><strong>Status:</strong> {{ message.get_status_display }}</p>
+{% if message.status == 'queued' %}<form method="post" action="{% url 'communications:message_send' message.pk %}">{% csrf_token %}<button class="btn btn-primary">Send Now</button></form>{% endif %}
+</div></div>
+<div class="card"><div class="card-header">Body</div><div class="card-body"><pre>{{ message.body }}</pre></div></div>
+{% endblock %}

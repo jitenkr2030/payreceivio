@@ -1,0 +1,63 @@
+{% extends "base/base.html" %}
+{% load common_tags %}
+{% load humanize %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1><i class="bi bi-receipt"></i> Invoices</h1>
+    <div>
+        <a href="{% url 'receivables:invoice_overdue' %}" class="btn btn-outline-danger btn-sm">Overdue</a>
+        <a href="{% url 'receivables:invoice_due_today' %}" class="btn btn-outline-warning btn-sm">Due Today</a>
+        <a href="{% url 'receivables:invoice_upcoming' %}" class="btn btn-outline-info btn-sm">Upcoming</a>
+        <a href="{% url 'receivables:invoice_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Invoice</a>
+    </div>
+</div>
+
+<div class="row g-2 mb-3">
+    <div class="col-md-2"><strong>Ageing:</strong></div>
+    {% for bucket, label in AGEING_BUCKETS %}
+    <div class="col-md-1 small">{{ label }}: <br><strong>{{ CURRENCY_SYMBOL }}{{ ageing_summary|lookup:bucket|floatformat:0|intcomma }}</strong></div>
+    {% endfor %}
+    <div class="col-md-1 small">Total: <br><strong>{{ CURRENCY_SYMBOL }}{{ ageing_summary.total|floatformat:0|intcomma }}</strong></div>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5"><input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search invoice # or customer..."></div>
+    <div class="col-md-3"><select name="status" class="form-select">
+        <option value="">All status</option>
+        <option value="unpaid" {% if status == 'unpaid' %}selected{% endif %}>Unpaid</option>
+        <option value="partially_paid" {% if status == 'partially_paid' %}selected{% endif %}>Partially Paid</option>
+        <option value="paid" {% if status == 'paid' %}selected{% endif %}>Paid</option>
+        <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Overdue</option>
+        <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+    </select></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary">Search</button></div>
+</form>
+
+<div class="card"><div class="card-body">
+<table class="table table-hover table-sm">
+<thead><tr><th>Invoice #</th><th>Customer</th><th>Date</th><th>Due</th><th class="text-end">Total</th><th class="text-end">Outstanding</th><th>Status</th></tr></thead>
+<tbody>
+{% for i in invoices %}
+<tr>
+    <td><a href="{% url 'receivables:invoice_detail' i.pk %}">{{ i.invoice_number }}</a></td>
+    <td>{{ i.customer.name }}</td>
+    <td>{{ i.invoice_date|date:"d M Y" }}</td>
+    <td>{{ i.due_date|date:"d M Y" }}{% if i.status == 'overdue' %} <span class="badge bg-danger">Overdue</span>{% endif %}</td>
+    <td class="text-end">{{ CURRENCY_SYMBOL }}{{ i.total_amount|floatformat:0|intcomma }}</td>
+    <td class="text-end">{{ CURRENCY_SYMBOL }}{{ i.outstanding_amount|floatformat:0|intcomma }}</td>
+    <td><span class="badge bg-{% if i.status == 'paid' %}success{% elif i.status == 'overdue' %}danger{% elif i.status == 'partially_paid' %}warning{% else %}info{% endif %}">{{ i.get_status_display }}</span></td>
+</tr>
+{% empty %}
+<tr><td colspan="7" class="text-center text-muted py-3">No invoices</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div></div>
+{% if is_paginated %}
+<nav><ul class="pagination">
+{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>{% endif %}
+<li class="page-item active"><a class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</a></li>
+{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Notifications</h1>
+<table class="table"><tr><th>Type</th><th>Title</th><th>Message</th><th>Date</th><th></th></tr>
+{% for n in notifications %}
+<tr class="{% if not n.is_read %}table-primary{% endif %}">
+<td><span class="badge bg-secondary">{{ n.get_notif_type_display }}</span></td><td>{{ n.title }}</td><td>{{ n.message|truncatechars:80 }}</td><td>{{ n.created_at|date:"d M Y H:i" }}</td>
+<td>{% if not n.is_read %}<button onclick="markRead({{ n.pk }})" class="btn btn-sm btn-outline-primary">Mark Read</button>{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No notifications</td></tr>{% endfor %}
+</table>
+<script>
+function markRead(id){fetch('/notifications/'+id+'/read/',{method:'POST',headers:{'X-CSRFToken':'{{ csrf_token }}'}}).then(()=>location.reload())}
+</script>
+{% endblock %}

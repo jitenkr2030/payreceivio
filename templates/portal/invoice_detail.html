@@ -1,0 +1,10 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Invoice {{ invoice.invoice_number }}</h1>
+<div class="card mb-3"><div class="card-body">
+<p><strong>Date:</strong> {{ invoice.invoice_date }}</p>
+<p><strong>Due:</strong> {{ invoice.due_date }}</p>
+<p><strong>Total:</strong> {{ invoice.total_amount }}</p>
+<p><strong>Outstanding:</strong> {{ invoice.outstanding_amount }}</p>
+{% if invoice.outstanding_amount > 0 %}<a href="{% url 'portal:pay_now' invoice.pk %}" class="btn btn-success">Pay Now</a>{% endif %}
+</div></div>
+{% endblock %}

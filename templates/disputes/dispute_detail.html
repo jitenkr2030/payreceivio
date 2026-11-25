@@ -1,0 +1,8 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Dispute {{ dispute.dispute_number }}</h1>
+<p><strong>Customer:</strong> {{ dispute.customer.name }}</p>
+<p><strong>Type:</strong> {{ dispute.get_dispute_type_display }}</p>
+<p><strong>Amount:</strong> {{ dispute.amount_in_dispute }}</p>
+<p><strong>Status:</strong> {{ dispute.get_status_display }}</p>
+<p><strong>Description:</strong> {{ dispute.description }}</p>
+{% endblock %}

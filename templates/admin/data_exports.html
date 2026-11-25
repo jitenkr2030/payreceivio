@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Data Exports</h1><table class="table"><tr><th>Type</th><th>Status</th><th>Date</th></tr>{% for e in exports %}<tr><td>{{ e.export_type }}</td><td>{{ e.status }}</td><td>{{ e.created_at }}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No exports</td></tr>{% endfor %}</table>{% endblock %}

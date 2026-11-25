@@ -1,0 +1,6 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Sync Jobs</h1>
+<table class="table"><tr><th>Connection</th><th>Direction</th><th>Status</th><th>Processed</th><th>Started</th><th>Completed</th></tr>
+{% for j in jobs %}<tr><td>{{ j.connection.name }}</td><td>{{ j.direction }}</td><td><span class="badge bg-{% if j.status == 'completed' %}success{% elif j.status == 'failed' %}danger{% else %}warning{% endif %}">{{ j.status }}</span></td><td>{{ j.records_processed }}</td><td>{{ j.started_at|date:"d M Y H:i" }}</td><td>{{ j.completed_at|date:"d M Y H:i" }}</td></tr>{% empty %}<tr><td colspan="6" class="text-center text-muted">No sync jobs</td></tr>{% endfor %}
+</table>
+{% endblock %}

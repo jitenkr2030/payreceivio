@@ -1,0 +1,6 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Accounting Connectors</h1>
+<div class="row g-3">{% for c in connectors %}
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>{{ c.label }}</h5><p class="text-muted">{{ c.vendor }}</p><p><span class="badge bg-secondary">{{ c.auth_method }}</span> {% if c.is_active %}<span class="badge bg-success">Active</span>{% endif %}</p></div></div></div>
+{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Territories</h1><table class="table"><tr><th>Name</th><th>Parent</th></tr>{% for t in territories %}<tr><td>{{ t.name }}</td><td>{{ t.parent.name|default:'-' }}</td></tr>{% empty %}<tr><td colspan="2" class="text-center text-muted">No territories</td></tr>{% endfor %}</table>{% endblock %}

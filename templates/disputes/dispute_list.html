@@ -1,0 +1,6 @@
+{% extends "base/base.html" %}
+{% block content %}<div class="d-flex justify-content-between mb-3"><h1>Disputes</h1><a href="{% url 'disputes:create' %}" class="btn btn-primary">New Dispute</a></div>
+<table class="table"><tr><th>Dispute #</th><th>Customer</th><th>Type</th><th class="text-end">Amount</th><th>Status</th></tr>
+{% for d in disputes %}<tr><td><a href="{% url 'disputes:detail' d.pk %}">{{ d.dispute_number }}</a></td><td>{{ d.customer.name }}</td><td>{{ d.get_dispute_type_display }}</td><td class="text-end">{{ d.amount_in_dispute }}</td><td><span class="badge bg-{% if d.status == 'resolved' %}success{% elif d.status == 'open' %}warning{% else %}secondary{% endif %}">{{ d.get_status_display }}</span></td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No disputes</td></tr>{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Refunds</h1><table class="table"><tr><th>Refund #</th><th>Payment</th><th>Amount</th><th>Status</th></tr>{% for r in refunds %}<tr><td>{{ r.refund_number }}</td><td>{{ r.payment_id }}</td><td>{{ r.amount }}</td><td>{{ r.status }}</td></tr>{% empty %}<tr><td colspan="4" class="text-center text-muted">No refunds</td></tr>{% endfor %}</table>{% endblock %}

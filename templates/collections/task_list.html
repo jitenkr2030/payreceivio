@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1><i class="bi bi-list-check"></i> Collection Tasks</h1>
+    <a href="{% url 'collections:task_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Task</a>
+</div>
+<form method="get" class="mb-3"><select name="status" class="form-select" style="max-width:200px" onchange="this.form.submit()">
+    <option value="">All status</option>
+    <option value="open" {% if status == 'open' %}selected{% endif %}>Open</option>
+    <option value="in_progress" {% if status == 'in_progress' %}selected{% endif %}>In Progress</option>
+    <option value="completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
+    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Overdue</option>
+</select></form>
+<div class="card"><div class="card-body">
+<table class="table table-hover">
+<thead><tr><th>Title</th><th>Customer</th><th>Type</th><th>Priority</th><th>Assigned To</th><th>Due</th><th>Status</th></tr></thead>
+<tbody>
+{% for t in tasks %}
+<tr class="{% if t.status == 'overdue' %}table-danger{% endif %}">
+    <td>{{ t.title }}</td>
+    <td><a href="{% url 'customers:detail' t.customer_id %}">{{ t.customer.name }}</a></td>
+    <td>{{ t.get_task_type_display }}</td>
+    <td><span class="badge bg-{% if t.priority == 'urgent' %}danger{% elif t.priority == 'high' %}warning{% else %}info{% endif %}">{{ t.get_priority_display }}</span></td>
+    <td>{{ t.assigned_to.display_name }}</td>
+    <td>{{ t.due_date|date:"d M Y" }}</td>
+    <td><span class="badge bg-{% if t.status == 'completed' %}success{% elif t.status == 'overdue' %}danger{% elif t.status == 'in_progress' %}warning{% else %}primary{% endif %}">{{ t.get_status_display }}</span></td>
+</tr>
+{% empty %}<tr><td colspan="7" class="text-center text-muted py-3">No tasks</td></tr>{% endfor %}
+</tbody>
+</table>
+</div></div>
+{% endblock %}

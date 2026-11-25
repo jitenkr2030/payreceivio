@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Branches</h1><table class="table"><tr><th>Name</th><th>Company</th><th>Head Office</th></tr>{% for b in branches %}<tr><td>{{ b.name }}</td><td>{{ b.company.name }}</td><td>{% if b.is_head_office %}<i class="bi bi-check-circle text-success"></i>{% endif %}</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">No branches</td></tr>{% endfor %}</table>{% endblock %}

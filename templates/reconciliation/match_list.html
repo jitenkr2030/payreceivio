@@ -1,0 +1,2 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Reconciliation Matches</h1><table class="table"><tr><th>Bank Txn</th><th>Payment</th><th>Type</th><th>Confidence</th><th>Approved</th></tr>{% for m in matches %}<tr><td>{{ m.bank_transaction_id }}</td><td>{{ m.payment_id }}</td><td>{{ m.match_type }}</td><td>{{ m.confidence }}%</td><td>{{ m.approved_at|default:"Pending" }}</td></tr>{% empty %}<tr><td colspan="5" class="text-center text-muted">No matches</td></tr>{% endfor %}</table>{% endblock %}

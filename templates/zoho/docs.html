@@ -1,0 +1,9 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Zoho Books Connector Documentation</h1>
+<div class="card"><div class="card-body">
+<h5>Setup</h5><p>The Zoho Books connector uses REST API v3 with OAuth 2.0 authentication.</p>
+<h5 class="mt-3">OAuth Flow</h5><ol><li>Create a Zoho API client at <a href="https://api-console.zoho.com">Zoho API Console</a></li><li>Configure the redirect URL to <code>{% url 'zoho:oauth_callback' %}</code></li><li>Authorize and obtain the refresh token</li><li>Store client_id, client_secret, and refresh_token in the connection credentials</li></ol>
+<h5 class="mt-3">Data Center</h5><p>Supports .com, .in, .eu data centers. Set the data_center in the connection config.</p>
+<h5 class="mt-3">Supported Entities</h5><ul><li>Contacts (customers)</li><li>Invoices</li><li>Credit notes</li><li>Customer payments (receipts)</li></ul>
+</div></div>
+{% endblock %}

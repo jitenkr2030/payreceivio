@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Administration</h1>
+<div class="row g-3">
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>API Tokens</h5><a href="{% url 'administration:api_tokens' %}" class="btn btn-outline-primary">Manage</a></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>Data Exports</h5><a href="{% url 'administration:exports' %}" class="btn btn-outline-primary">View</a></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>Audit Logs</h5><a href="{% url 'audit:logs' %}" class="btn btn-outline-primary">View</a></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>Users & Roles</h5><a href="{% url 'organizations:role_list' %}" class="btn btn-outline-primary">Manage</a></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>Integrations</h5><a href="{% url 'integrations:connection_list' %}" class="btn btn-outline-primary">Manage</a></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-body"><h5>Subscription</h5><a href="{% url 'subscriptions:list' %}" class="btn btn-outline-primary">View</a></div></div></div>
+</div>
+{% endblock %}

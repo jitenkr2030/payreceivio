@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Import Customers from CSV</h1>
+<div class="card"><div class="card-body">
+    <p>Upload a CSV file with columns: <code>code, name, email, phone, gst_number, city, state, credit_limit, credit_period_days</code></p>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.file }}
+        <button class="btn btn-primary mt-3">Import</button>
+    </form>
+</div></div>
+{% endblock %}

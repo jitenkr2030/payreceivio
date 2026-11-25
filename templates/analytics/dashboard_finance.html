@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% load common_tags %}
+{% load humanize %}
+{% block content %}<h1>Finance Manager Dashboard</h1>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-white bg-primary"><div class="card-body"><div class="small">Total Receivables</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ kpis.total_receivables|floatformat:0|intcomma }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-danger"><div class="card-body"><div class="small">Overdue</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ kpis.total_overdue|floatformat:0|intcomma }}</div></div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-success"><div class="card-body"><div class="small">Collected (Month)</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ kpis.collected_this_month|floatformat:0|intcomma }}</div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="small">DSO</div><div class="h3">{{ kpis.dso|floatformat:1 }} days</div></div></div></div>
+</div>
+<div class="card"><div class="card-header">Ageing Summary</div><div class="card-body">
+<table class="table">{% for bucket, label in AGEING_BUCKETS %}<tr><td>{{ label }}</td><td class="text-end">{{ CURRENCY_SYMBOL }}{{ kpis.ageing_summary|lookup:bucket|floatformat:2|intcomma }}</td></tr>{% endfor %}<tr class="table-dark"><td><strong>Total</strong></td><td class="text-end"><strong>{{ CURRENCY_SYMBOL }}{{ kpis.ageing_summary.total|floatformat:2|intcomma }}</strong></td></tr></table>
+</div></div>
+{% endblock %}

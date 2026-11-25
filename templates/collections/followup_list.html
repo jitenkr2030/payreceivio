@@ -1,0 +1,13 @@
+{% extends "base/base.html" %}
+{% block content %}
+<h1>Follow-ups</h1>
+<a href="{% url 'collections:followup_create' %}" class="btn btn-primary mb-3">Log Follow-up</a>
+<table class="table">
+<thead><tr><th>Date</th><th>Customer</th><th>Channel</th><th>Outcome</th><th>By</th></tr></thead>
+<tbody>
+{% for f in followups %}
+<tr><td>{{ f.followup_at|date:"d M Y H:i" }}</td><td>{{ f.customer.name }}</td><td>{{ f.get_channel_display }}</td><td>{{ f.get_outcome_display }}</td><td>{{ f.followed_up_by.display_name|default:"-" }}</td></tr>
+{% empty %}<tr><td colspan="5" class="text-center text-muted">No follow-ups</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endblock %}

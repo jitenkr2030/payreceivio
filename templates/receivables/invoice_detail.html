@@ -1,0 +1,64 @@
+{% extends "base/base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1><i class="bi bi-receipt"></i> Invoice {{ invoice.invoice_number }}</h1>
+    <div>
+        <a href="{% url 'receivables:invoice_update' invoice.pk %}" class="btn btn-outline-primary">Edit</a>
+        {% if invoice.outstanding_amount > 0 %}<a href="{% url 'payments:create' %}?customer={{ invoice.customer_id }}" class="btn btn-success">Record Payment</a>{% endif %}
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-white bg-primary"><div class="card-body">
+        <div class="small">Total Amount</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ invoice.total_amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-success"><div class="card-body">
+        <div class="small">Paid</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ invoice.paid_amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-3"><div class="card text-white bg-danger"><div class="card-body">
+        <div class="small">Outstanding</div><div class="h3">{{ CURRENCY_SYMBOL }}{{ invoice.outstanding_amount|floatformat:2|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body">
+        <div class="small text-muted">Status</div><div class="h3"><span class="badge bg-{% if invoice.status == 'paid' %}success{% elif invoice.status == 'overdue' %}danger{% elif invoice.status == 'partially_paid' %}warning{% else %}info{% endif %}">{{ invoice.get_status_display }}</span></div>
+    </div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100"><div class="card-header">Invoice Details</div><div class="card-body">
+            <table class="table table-sm">
+                <tr><th>Customer</th><td><a href="{% url 'customers:detail' invoice.customer_id %}">{{ invoice.customer.name }}</a></td></tr>
+                <tr><th>Invoice Date</th><td>{{ invoice.invoice_date|date:"d M Y" }}</td></tr>
+                <tr><th>Due Date</th><td>{{ invoice.due_date|date:"d M Y" }}</td></tr>
+                <tr><th>Subtotal</th><td>{{ CURRENCY_SYMBOL }}{{ invoice.subtotal|floatformat:2 }}</td></tr>
+                <tr><th>Tax</th><td>{{ CURRENCY_SYMBOL }}{{ invoice.tax_amount|floatformat:2 }}</td></tr>
+                <tr><th>Adjustment</th><td>{{ CURRENCY_SYMBOL }}{{ invoice.adjustment|floatformat:2 }}</td></tr>
+                <tr><th>Payment Terms</th><td>{{ invoice.payment_terms }}</td></tr>
+                <tr><th>Salesperson</th><td>{{ invoice.salesperson.display_name|default:"-" }}</td></tr>
+                <tr><th>Accounting Ref</th><td>{{ invoice.accounting_ref|default:"Not synced" }}</td></tr>
+            </table>
+            {% if invoice.notes %}<div class="alert alert-info"><strong>Notes:</strong> {{ invoice.notes }}</div>{% endif %}
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100"><div class="card-header">Payment Allocations</div><div class="card-body">
+            <table class="table table-sm">
+                <thead><tr><th>Date</th><th>Receipt #</th><th>Method</th><th class="text-end">Amount</th></tr></thead>
+                <tbody>
+                    {% for a in allocations %}
+                    <tr>
+                        <td>{{ a.payment.payment_date|date:"d M Y" }}</td>
+                        <td><a href="{% url 'payments:detail' a.payment_id %}">{{ a.payment.payment_number }}</a></td>
+                        <td>{{ a.payment.get_payment_method_display }}</td>
+                        <td class="text-end">{{ CURRENCY_SYMBOL }}{{ a.amount|floatformat:2|intcomma }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted">No payments allocated yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div></div>
+    </div>
+</div>
+{% endblock %}

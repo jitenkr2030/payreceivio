@@ -1,0 +1,8 @@
+{% extends "base/base.html" %}
+{% block content %}<h1>Account Statement</h1>
+<p><strong>Opening Balance:</strong> {{ opening_balance }}</p>
+<table class="table"><tr><th>Date</th><th>Type</th><th>Reference</th><th class="text-end">Debit</th><th class="text-end">Credit</th><th class="text-end">Balance</th></tr>
+{% for e in entries %}<tr><td>{{ e.date }}</td><td>{{ e.type }}</td><td>{{ e.reference }}</td><td class="text-end">{{ e.debit|default:'-' }}</td><td class="text-end">{{ e.credit|default:'-' }}</td><td class="text-end">{{ e.balance }}</td></tr>{% endfor %}
+</table>
+<p><strong>Closing Balance:</strong> {{ closing_balance }}</p>
+{% endblock %}

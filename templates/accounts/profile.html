@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+{% block title %}Profile - {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">My Profile</h2>
+        <div class="card mb-4">
+            <div class="card-header">Personal Information</div>
+            <div class="card-body">
+                <form method="post">{% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Multi-Factor Authentication</div>
+            <div class="card-body">
+                {% if user.mfa_enabled %}
+                <div class="alert alert-success">MFA is enabled on your account.</div>
+                {% else %}
+                <div class="alert alert-warning">MFA is not enabled. We strongly recommend enabling it for security.</div>
+                <a href="{% url 'accounts:mfa_setup' %}" class="btn btn-primary">Enable MFA</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
